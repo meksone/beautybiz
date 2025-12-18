@@ -1,0 +1,74 @@
+.sf-menu,.sf-menu *{margin:0;padding:0;list-style:none}
+.sf-menu{line-height:1; position:relative;}
+.sf-menu ul{position:absolute;top:-999em;width:10em}
+
+/* shows sub-menu instead of superfish */
+.sf-menu ul{
+	visibility: hidden;
+	opacity: 0;
+	transform: translateY(-2em);
+	
+	/*
+	transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
+	transition-delay: 0.4s;
+	***/
+	transition: all 0.2s ease-in-out 0.2s, visibility 0.2s linear 0.2s, z-index 0.5s linear 0.01s;
+	transition-delay: 0.2s;
+	
+	/*
+	transition: all 0.1s ease-in-out 0s, visibility 0s linear 0.1s, z-index 0s linear 0.01s;
+	transition-delay: 0.2s;
+	*/
+}
+.sf-menu li:hover > .sub-menu {
+	visibility: visible; 
+	opacity: 1;
+	transform: translateY(0%);
+	/*transition-delay: 0s, 0s, 0.3s; */
+	
+	/***transition-delay: 0.4s, 0.4s, 0.7s;***/
+	transition: all 0.2s ease-in-out 0.2s, visibility 0.2s linear 0.2s, z-index 0.5s linear 0.01s;
+	transition-delay: 0.2s;
+}
+/* end. shows sub-menu instead of superfish */
+
+.header .sf-menu>li.menu-item{display:inline-block;float:left;vertical-align:middle;position:relative;padding:0;}
+.header .sf-menu>li.menu-item:first-child{}
+.header .sf-menu>li.menu-item:last-child{}
+
+.header .sf-menu>li.menu-item>a{display:block;z-index:100;position:relative;letter-spacing:0;}
+.header .sf-menu>li.menu-item:first-child>a{display:block;z-index:100;position:relative;letter-spacing:0;}
+.header .sf-menu>li.menu-item:last-child>a{display:block;z-index:100;position:relative;letter-spacing:0;}
+
+
+.sf-menu ul li{width:100%}
+.sf-menu li:hover{visibility:inherit}
+.sf-menu li{position:relative;float:left}
+.sf-menu a{position:relative;display:block}
+.sf-menu li.sfHover ul,.sf-menu li:hover ul{top:100%;left:0;z-index:99}
+ul.sf-menu li.sfHover li ul,ul.sf-menu li:hover li ul{top:-999em}
+ul.sf-menu li li.sfHover ul,ul.sf-menu li li:hover ul{top:0;left:100%}
+ul.sf-menu li li.sfHover li ul,ul.sf-menu li li:hover li ul{top:-999em}
+ul.sf-menu li li li.sfHover ul,ul.sf-menu li li li:hover ul{top:0;left:10em}
+.sf-menu a.sf-with-ul{padding-right:2.25em;min-width:1px}
+.select-menu,.select-menu option{padding:5px;cursor:pointer}
+.sf-sub-indicator{position:absolute;width:10px;content:"\f0d7";font-family:FontAwesome;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;margin-left:5px;margin-top:-1px}
+a>.sf-sub-indicator{background-position:0 -100px}
+a:active>.sf-sub-indicator,a:focus>.sf-sub-indicator,a:hover>.sf-sub-indicator,li.sfHover>a>.sf-sub-indicator,li:hover>a>.sf-sub-indicator{background-position:-10px -100px}
+.sf-menu ul .sf-sub-indicator{background-position:-10px 0}
+.sf-menu ul a>.sf-sub-indicator{background-position:0 0}
+.sf-menu ul a:active>.sf-sub-indicator,.sf-menu ul a:focus>.sf-sub-indicator,.sf-menu ul a:hover>.sf-sub-indicator,.sf-menu ul li.sfHover>a>.sf-sub-indicator,.sf-menu ul li:hover>a>.sf-sub-indicator{background-position:-10px 0}
+
+
+.header .nav__primary .sf-menu>.menu-item.current-menu-item>a .sf-sub-indicator,.header .nav__primary .sf-menu>.menu-item.sfHover>a .sf-sub-indicator,.header .nav__primary .sf-menu>.menu-item>a:active .sf-sub-indicator,.header .nav__primary .sf-menu>.menu-item>a:focus .sf-sub-indicator,.header .nav__primary .sf-menu>.menu-item>a:hover .sf-sub-indicator{background-position:-10px -100px}
+.header .nav__primary{margin:0}
+
+
+
+
+.header .nav__primary .sf-menu>.menu-item>.sub-menu .menu-item>a>.sf-sub-indicator{right:10px;left:auto}
+.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item.current-menu-item>a .sf-sub-indicator,.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item.sfHover>a .sf-sub-indicator{background-position:-10px 0}
+.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item>.sub-menu{width:170px;border:1px solid #f0f0f0;padding:0;left:auto;right:100%;overflow:hidden;top:-1px;margin-right:2px;margin-left:2px;border-radius:0}
+.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item>.sub-menu .menu-item{z-index:10;padding:0;border:none;border-top:1px solid #f0f0f0;text-align:center;position:relative}
+.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item>.sub-menu .menu-item:first-child{border:none}
+.header .nav__primary .sf-menu>.menu-item>.sub-menu>.menu-item>.sub-menu .menu-item>a{display:block;padding:12px 10px}

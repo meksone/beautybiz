@@ -1,0 +1,357 @@
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( '-1' );
+}
+
+
+/*
+add_action('manage_pages_custom_column', '_pincuter_manage_columns', 10, 2);
+add_filter('manage_edit-page_columns', '_pincuter_edit_columns');
+
+add_action('manage_assembleazionisti_posts_custom_column', '_pincuter_manage_columns', 10, 2);
+add_filter('manage_edit-assembleazionisti_columns', '_pincuter_edit_columns');
+
+add_action('manage_comunicatifinanza_posts_custom_column', '_pincuter_manage_columns', 10, 2);
+add_filter('manage_edit-comunicatifinanza_columns', '_pincuter_edit_columns');
+
+add_action('manage_bilanciorelazioni_posts_custom_column', '_pincuter_manage_columns', 10, 2);
+add_filter('manage_edit-bilanciorelazioni_columns', '_pincuter_edit_columns');
+
+add_action('manage_infoazionisti_posts_custom_column', '_pincuter_manage_columns', 10, 2);
+add_filter('manage_edit-infoazionisti_columns', '_pincuter_edit_columns');
+*/
+
+
+// for posts
+add_filter ('manage_posts_columns', '_pincuter_add_id_column');
+add_action ('manage_posts_custom_column', '_pincuter_id_column_content', 5, 2);
+// for pages
+add_filter ('manage_pages_columns', '_pincuter_add_id_column');
+add_action ('manage_pages_custom_column', '_pincuter_id_column_content', 5, 2);
+
+
+function _pincuter_add_id_column( $columns ) {
+	$checkbox = array_slice( $columns , 0, 1 );
+	$columns = array_slice( $columns , 1 );
+
+	$id['revealid_id'] = 'ID';
+	$thumb['thumbnail'] = __("Thumbnail", CURRENT_DOMAIN);
+	
+	$columns = array_merge( $checkbox, $id, $thumb, $columns );
+	return $columns;
+}
+
+function _pincuter_id_column_content( $column, $post_id ) {
+	
+	$width = (int) 70;
+	$height = (int) 70;
+	
+	switch ( $column ) {
+	
+		case 'revealid_id':
+			echo $post_id;
+			break;
+	
+		case 'thumbnail':
+			// thumbnail of WP 2.9
+			$thumbnail_id = get_post_meta( $post_id, '_thumbnail_id', true );
+			// image from gallery
+			$attachments = get_children( array('post_parent' => $post_id, 'post_type' => 'attachment', 'post_mime_type' => 'image') );
+			if ($thumbnail_id)
+				$thumb = wp_get_attachment_image( $thumbnail_id, array($width, $height), true );
+			elseif ($attachments) {
+				foreach ( $attachments as $attachment_id => $attachment ) {
+					$thumb = wp_get_attachment_image( $attachment_id, array($width, $height), true );
+				}
+			}
+			if ( isset($thumb) && $thumb ) {
+				echo $thumb;
+			} else {
+				echo __('None', CURRENT_DOMAIN);
+			}
+			break;
+	}
+}
+
+add_action('admin_head', '_pincuter_admin_id_column_styling');
+function _pincuter_admin_id_column_styling() {
+	echo '<style type="text/css">';
+		echo 'th#revealid_id{width:50px;}';
+		echo 'th#thumbnail{width:100px;}';
+		
+		echo 'th#ytitle{width:50px;}';
+		echo 'th#ydesc{width:50px;}';
+		echo 'th#yalt{width:50px;}';
+	echo '</style>';
+}
+
+
+
+// for posts
+add_action( 'manage_posts_custom_column', '_pincuter_data_modified_column', 10, 2 );
+add_filter( 'manage_posts_columns', '_pincuter_data_modified_column_content' );
+// for pages
+add_action('manage_pages_custom_column', '_pincuter_data_modified_column', 10, 2);
+add_filter('manage_edit-page_columns', '_pincuter_data_modified_column_content');
+
+function _pincuter_data_modified_column( $column, $post_id ) {
+
+	switch ( $column ) {
+		
+		/*
+		case 'modified':
+			$m_orig		= get_post_field( 'post_modified', $post_id, 'raw' );
+			$m_stamp	= strtotime( $m_orig );
+			//$modified	= date('n/j/y @ g:i a', $m_stamp );
+			$modified	= date('j/n/y @ g:i a', $m_stamp );
+
+			$modr_id	= get_post_meta( $post_id, '_edit_last', true );
+			$auth_id	= get_post_field( 'post_author', $post_id, 'raw' );
+			$user_id	= !empty( $modr_id ) ? $modr_id : $auth_id;
+			$user_info	= get_userdata( $user_id );
+		
+			echo '<p class="mod-date">';
+			echo '<em>'.$modified.'</em><br />';
+			echo 'by <strong>'.$user_info->display_name.'<strong>';
+			echo '</p>';
+
+			break;
+		*/
+		
+		case 'modified':
+			$m_orig		= get_post_field( 'post_modified', $post_id, 'raw' );
+			$m_stamp	= strtotime( $m_orig );
+			/*$modified	= date('n/j/y @ g:i a', $m_stamp );*/
+			$modified	= date('j/n/y @ g:i a', $m_stamp );
+				
+				
+			$modr_id	= get_post_meta( $post_id, '_edit_last', true );
+			$auth_id	= get_post_field( 'post_author', $post_id, 'raw' );
+			$user_id	= !empty( $modr_id ) ? $modr_id : $auth_id;
+			$user_info	= get_userdata( $user_id );
+				
+				
+			$publishied = esc_html(get_the_date( 'j F Y', $post_id ));
+			echo '<p class="publish-date">';
+			echo '<strong>Pubblicato '.$publishied.'</strong>';
+			echo '</p>';
+				
+			echo '<p class="mod-date">';
+			echo '<em>Modificato '.$modified.'</em><br />';
+			echo 'by <em>'.$user_info->display_name.'<em>';
+			echo '</p>';
+
+		break;
+		
+		
+		case 'ytitle':
+			$ytitle = get_post_meta($post_id, '_yoast_wpseo_title', true); /* YOAST */
+			/*$ytitle = get_post_meta($post_id, '_aioseop_title', true); ALL IN ONE SEO PACK */
+			if( !empty($ytitle) ){
+				$ytitle_strlen = strlen($ytitle);
+				if( $ytitle_strlen >= 65 ){
+					echo '<div aria-hidden="true" class="wpseo-score-icon ok"></div>';
+				} else {
+					echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+				}
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+		case 'ydesc':
+			$ydesc = get_post_meta($post_id, '_yoast_wpseo_metadesc', true); /* YOAST */
+			/*$ydesc = get_post_meta($post_id, '_aioseop_description', true); ALL IN ONE SEO PACK */
+			if( !empty($ydesc) ){
+				$ydesc_strlen = strlen($ydesc);
+				if( $ydesc_strlen >= 160 ){
+					echo '<div aria-hidden="true" class="wpseo-score-icon ok"></div>';
+				} else {
+					echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+				}
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+
+	// end all case breaks
+	}
+
+}
+
+function _pincuter_data_modified_column_content( $columns ) {
+	$columns['modified']	= 'Dates - Last Modified';
+	
+	$columns['ytitle']	= 'YTitle';
+	$columns['ydesc']	= 'YDesc';
+	
+	return $columns;
+}
+
+
+add_filter( 'manage_edit-post_columns', '_pincuter_single_post_manage_column_unset',10, 1 );
+add_filter( 'manage_edit-page_columns', '_pincuter_single_post_manage_column_unset',10, 1 );
+function _pincuter_single_post_manage_column_unset($columns){
+	unset($columns['date']);
+	return $columns;
+}
+
+
+/*########## --- SEPARATOR --- ##########*/
+
+
+add_filter( 'manage_media_columns', '_pincuter_media_column_id' );
+function _pincuter_media_column_id($columns) {
+    //$columns['revealid_id'] = 'ID';
+	$columns['ytitle']	= 'YTitle';
+	$columns['yalt']	= 'YAlt';
+    return $columns;
+} 
+
+add_filter( 'manage_media_custom_column', '_pincuter_media_column_content', 10, 2 ); 
+function _pincuter_media_column_content($columnName, $columnID){
+    /*
+	if($columnName == 'revealid_id'){
+		echo $columnID;
+    }
+	*/
+	switch ( $columnName ) {
+		case 'ytitle':
+			$ytitle = get_the_title($columnID);
+			if(!empty($ytitle)){
+				echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+		case 'yalt':
+			$yalt = get_post_meta( $columnID, '_wp_attachment_image_alt', true);
+			if(!empty($yalt)){
+				echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+	}
+}
+
+
+function yoast_seo_remove_columns( $columns ) {
+	/* remove the Yoast SEO columns */
+	unset( $columns['wpseo-score'] );
+	unset( $columns['wpseo-title'] );
+	unset( $columns['wpseo-metadesc'] );
+	unset( $columns['wpseo-focuskw'] );
+	unset( $columns['wpseo-score-readability'] );
+	unset( $columns['wpseo-links'] );
+	unset( $columns['wpseo-linked'] );
+	
+	/* ALL IN ONE SEO PACK 
+	unset( $columns['seotitle'] );
+	unset( $columns['seodesc'] );
+	*/
+	
+	return $columns;
+}
+
+/* remove from posts */
+add_filter ( 'manage_edit-post_columns', 'yoast_seo_remove_columns' );
+/* remove from pages */
+add_filter ( 'manage_edit-page_columns', 'yoast_seo_remove_columns' );
+/* remove from woocommerce product post type */
+add_filter ( 'manage_edit-product_columns', 'yoast_seo_remove_columns' );
+
+
+
+/* ### */
+
+
+
+add_filter('manage_edit-category_columns','_pincuter_category_columns');
+function _pincuter_category_columns($columns){
+	unset( $columns['wpseo-score'] );
+	unset( $columns['wpseo-score-readability'] );
+	
+	$columns['ytitle']	= 'YTitle';
+	$columns['ydesc']	= 'YDesc';
+
+	return $columns;
+	
+}
+
+
+add_filter ('manage_category_custom_column', '_pincuter_category_column_content', 10,3);
+function _pincuter_category_column_content($deprecated,$column_name,$term_id){
+	/*
+	if ($column_name == 'my_column') {
+		echo 'test';
+	}
+	*/
+	
+	$yoast_tax_meta = get_option("wpseo_taxonomy_meta");
+	$cat_meta = $yoast_tax_meta["category"];
+	
+	switch ( $column_name ) {
+				
+		case 'ytitle':
+			/*$ytitle = get_term_meta($term_id, '_yoast_wpseo_title', true); /* YOAST */
+			$ytitle = $cat_meta[$term_id]['wpseo_title'];
+			if( !empty($ytitle) ){
+				$ytitle_strlen = strlen($ytitle);
+				if( $ytitle_strlen >= 65 ){
+					echo '<div aria-hidden="true" class="wpseo-score-icon ok"></div>';
+				} else {
+					echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+				}
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+			
+		case 'ydesc':
+			/*$ydesc = get_term_meta($term_id, '_yoast_wpseo_metadesc', true); /* YOAST */
+			$ydesc = $cat_meta[$term_id]['wpseo_desc'];
+			if( !empty($ydesc) ){
+				$ydesc_strlen = strlen($ydesc);
+				if( $ydesc_strlen >= 160 ){
+					echo '<div aria-hidden="true" class="wpseo-score-icon ok"></div>';
+				} else {
+					echo '<div aria-hidden="true" class="wpseo-score-icon good"></div>';
+				}
+			} else {
+				echo '<div aria-hidden="true" class="wpseo-score-icon bad"></div>';
+			}
+			break;
+
+	// end all case breaks
+	}
+	
+}
+
+
+
+
+add_filter('manage_edit-category_columns','_pincuter_category_columns');
+function _pincuter_category_columns($columns){
+	$checkbox = array_slice( $columns , 0, 1 );
+	$columns = array_slice( $columns , 1 );
+
+	$id['revealid_id'] = 'ID';
+	$columns = array_merge( $checkbox, $id, $columns );
+
+	return $columns;
+	
+}
+
+add_filter ('manage_category_custom_column', '_pincuter_category_column_content', 10,3);
+function _pincuter_category_column_content($deprecated,$column_name,$term_id){
+		
+	switch ( $column_name ) {
+				
+		case 'revealid_id':
+			echo $term_id;
+			break;
+
+	// end all case breaks
+	}
+	
+}

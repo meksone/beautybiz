@@ -1,0 +1,51 @@
+		.cmb2-metabox-title {
+			font-size: 24px !important;
+			color: #0088cc !important;
+		}
+		.cmb-type-title {
+			padding: 3em 0 0.5em !important;
+			border-bottom: 2px solid #0088cc !important;
+		}
+		.cmb2-options-page .cmb2-metabox-title {
+			padding: 5px 0 0 12px !important;
+		}
+		
+		
+		.cmb2-postbox .postbox-header {
+			border-bottom: 2px solid #0088cc !important;
+		}
+		/*
+		.cmb2-postbox h2.hndle {
+			font-size: 24px !important;
+			padding: 12px 12px !important;
+			color: #0088cc !important;
+		}
+		*/
+		
+		
+
+.cmb-type-radio-image .cmb2-radio-list input[type="radio"] + label:hover, 
+.cmb-type-radio-image .cmb2-radio-list input[type="radio"]:checked + label {
+    border-color: transparent !important;
+	background: #0088cc !important;
+}
+.cmb-type-radio-image .cmb2-radio-list input[type="radio"] + label {
+    border: none !important;
+    /*display: block;*/
+	display: inline-block !important;
+	
+	background:    #999999 !important;
+	border-radius: 3px !important;
+	/*padding:       8px 15px !important;*/
+	padding:       7px !important;
+	color:         #ffffff !important;
+	font:          normal 400 14px/1 "Open Sans", sans-serif !important;
+	text-align:    center !important;
+	text-shadow:   0px 0px #000000 !important;
+}
+
+/*
+body.edit-php select.authors {
+	display: block !important;
+}
+*/
