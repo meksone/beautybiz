@@ -58,10 +58,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	/*
 	include_once(get_stylesheet_directory() . '/adv/adv_script_skin.php');
 	include_once(get_stylesheet_directory() . '/adv/adv_script_head.php');
-	
+	*/
     
 	include_once(get_stylesheet_directory() . '/adv_interna/adv_head.php');
-	*/
+
 	?>
 
 
